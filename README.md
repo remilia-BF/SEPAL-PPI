@@ -2,7 +2,8 @@
 
 **Structure-Enhanced Prediction with Attention-based Learning for Protein-Protein Interactions**
 
-![Uploading FIGURE1.png…]()
+<img width="1920" height="1080" alt="FIGURE1" src="https://github.com/user-attachments/assets/f77d1555-c84d-4d66-9da8-8ef570c0eef7" />
+
 
 
 SEPAL-PPI is a research codebase for protein-protein interaction prediction that combines protein language model embeddings, multimodal structural features, and ensemble inference. This repository is intended for full training, feature generation, benchmark reproduction, and research-oriented prediction workflows.
