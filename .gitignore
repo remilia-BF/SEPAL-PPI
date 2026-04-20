@@ -76,3 +76,5 @@ predict/Gmax/*
 predict/Gmax/Gly/*
 !predict/Gmax/Gly/**/*.csv
 dataset/Fta
+mutifeature/Human
+image/
