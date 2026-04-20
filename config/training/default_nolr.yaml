@@ -1,0 +1,23 @@
+
+epochs: 25
+batch_size: 128
+learning_rate: 0.0001
+seed: 42
+
+optimizer:
+  type: adamw
+  weight_decay: 0.01  
+  betas: [0.9, 0.999]  
+
+lr_scheduler:
+  type: 'none'
+  warmup:
+    enabled: true
+    epochs: 3                 
+    initial_lr_factor: 0.1    
+    strategy: 'exponential'   
+
+
+gradient_accumulation:
+  enabled: true
+  steps: 1

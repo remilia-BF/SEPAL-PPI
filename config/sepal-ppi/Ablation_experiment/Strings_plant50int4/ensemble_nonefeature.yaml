@@ -1,0 +1,6 @@
+configs:
+- results/Strings_plant50_int4/esm2_15b/sepal-ppi-cis/best_config.yaml
+- results/Strings_plant50_int4/esm2_15b/nonefeature/best_config.yaml
+mode: logits
+debug: false
+train_model: weighted

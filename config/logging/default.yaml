@@ -1,0 +1,4 @@
+# 默认日志配置
+
+level: "INFO"
+verbose: true 

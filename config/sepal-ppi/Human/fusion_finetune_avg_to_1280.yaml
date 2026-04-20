@@ -1,0 +1,19 @@
+experiment_name: fusion-finetune
+description: fusion_finetune_avg_to_1280
+defaults:
+- _self_
+- training: low
+- logging: default
+- output: default
+- inference: default
+- data: Human/esm2_15b.avg
+- model: avg_pooling-change
+finetune:
+  base_checkpoint: results/Human/esm2_15b/sepal-ppi-avg-noinput/best_model.pth
+  use_pretrained_embedding_dim: false
+  freeze_except:
+  - input_layer
+  - classifier
+change_embedding_dim: 1280
+protein_fasta_path: dataset/Human/2193/protein.fasta
+all_feature_folder: mutifeature/Human

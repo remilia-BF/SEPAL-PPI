@@ -1,0 +1,26 @@
+operation: "concatenation"
+description: "将两个池化后的蛋白向量进行拼接，输出维度为 2 * embedding_dim"
+embedding_dim: ${model.embedding_dim}
+preserve_order: true  # true: [protein1, protein2], false: [protein2, protein1]
+
+# 参数说明:
+# - preserve_order: 控制拼接顺序的布尔参数
+#   * true (默认): 按顺序拼接 [protein1_emb, protein2_emb]
+#     - 保持输入顺序，适用于有向图和非对称交互
+#     - 输出: [batch_size, 2 * embedding_dim]
+#   * false: 反向拼接 [protein2_emb, protein1_emb] 
+#     - 交换蛋白顺序，可用于数据增强
+#     - 输出: [batch_size, 2 * embedding_dim]
+
+# 使用示例:
+# 1. 标准拼接模式（默认）:
+#    post_pooling:
+#      operation: concatenation
+#      embedding_dim: 1280
+#      preserve_order: true
+#
+# 2. 反向拼接模式:
+#    post_pooling:
+#      operation: concatenation  
+#      embedding_dim: 1280
+#      preserve_order: false 

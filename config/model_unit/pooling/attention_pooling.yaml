@@ -1,0 +1,28 @@
+method: "attention_pooling"
+description: "优化的注意力池化：多头注意力 + 更强正则化"
+embedding_dim: ${model.embedding_dim}
+attention_num: 2          
+dropout: 0.05              
+save_attention: true
+
+# 新增优化参数
+attention_config:
+  # type 选项：
+  # - temperature_original: 使用固定 temperature
+  # - temperature_rel:      使用与序列长度相关的温度 T(L)=max(0.5, min(2.0, alpha * log(L)))
+  # - top_k:                使用可微分 Top-K 近似，仅关注前 k 个残基
+  type: "temperature_original"
+
+  # 通用参数
+  temperature: 0.3          # 基础温度参数（更低温度，使注意力更聚焦）
+  use_layer_norm: false     # 关闭层归一化
+  residual_connection: false # 关闭残差连接
+
+  # temperature_rel 模式的参数
+  #alpha: 0.3                # T(L)=max(0.5, min(2.0, alpha * log(L))) 中的 alpha 系数
+  #min_temperature: 0.3      # 最小温度下界
+  #max_temperature: 1.0      # 最大温度上界
+
+  # top_k 模式的参数
+  #top_k: 32                 # 关注的残基数量 K
+  #topk_sharpness: 10.0      # Top-K 近似的“锐度”参数，越大越接近硬 Top-K

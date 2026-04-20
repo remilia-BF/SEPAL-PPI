@@ -1,0 +1,3 @@
+method: "average_pooling"
+description: "将每个蛋白的序列嵌入向量进行平均，得到一个固定大小的表示"
+embedding_dim: ${model.embedding_dim}

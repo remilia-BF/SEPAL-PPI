@@ -1,0 +1,13 @@
+# 默认数据配置
+
+use_sequence_data: true
+embedding_file: emb/Interact_Ara/esm2_15b.Interact_Ara.lmdb/onlyCLS.lmdb
+embedding_dim: 5120
+target_precision: fp32
+train_file: dataset/Interact_Ara/c1Train.txt
+validation_file: dataset/Interact_Ara/c2Validation.txt
+test_file: dataset/Interact_Ara/c3Test.txt
+fasta_file: dataset/Interact_Ara/protein.fasta
+cache_size: 16500
+max_length: 1020
+cis_type: true

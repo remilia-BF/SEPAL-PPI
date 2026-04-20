@@ -1,0 +1,18 @@
+defaults:
+  - _self_
+  - /model_unit/input_data: change
+  - /model_unit/preprocessing: none
+  - /model_unit/pooling: average_pooling
+  - /model_unit/post_pooling: hadamard_product
+  - /model_unit/learning_architecture: MLP
+  - /model_unit/output: logits
+
+embedding_dim: ${change_embedding_dim}
+
+model_config:
+  input_data: ${..model_unit.input_data}
+  preprocessing: ${..model_unit.preprocessing}
+  pooling: ${..model_unit.pooling}
+  post_pooling: ${..model_unit.post_pooling}
+  learning_architecture: ${..model_unit.learning_architecture}
+  output: ${..model_unit.output}

@@ -1,0 +1,7 @@
+operation: "fast_compact_bilinear"
+description: "使用标准低秩双线性池化进行高效的双线性交互"
+embedding_dim: ${model.embedding_dim}
+rank_dim: 128
+dropout: 0.1
+output_dim: ${model.embedding_dim}
+use_normalization: false

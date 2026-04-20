@@ -1,0 +1,11 @@
+experiment_name: sepal-ppi-feature-contant
+defaults:
+- _self_
+- training: default_nolr
+- model: nonefeature
+- data: Human/esm2_15binput1280
+- logging: default
+- output: default
+- inference: default
+change_embedding_dim: 1280
+

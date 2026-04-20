@@ -1,0 +1,5 @@
+# 默认输出配置
+
+save_model: true
+save_predictions: true
+output_dir: "outputs/" 

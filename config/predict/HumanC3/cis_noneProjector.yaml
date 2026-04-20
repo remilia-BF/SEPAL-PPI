@@ -1,0 +1,19 @@
+ensemble_config: results/Human/esm2_15b/Ablation_experiment/cis_noneProjector_ensemble/ensemble_inference_config.yaml
+
+test_id_file: predict/Human/c3Test.csv
+test_protein_fasta: predict/Human/protein.fasta
+
+test_protein_lmdb_dir: 
+
+  model2: emb/Human/esm2_15b.HumanC3new.avg.1280.lmdb/onlyCLS.lmdb
+  model1:  emb/Human/esm2_15b.HumanC3new.avg.1280.lmdb/noCLSeos.lmdb/bucketed_embeddings.lmdb
+
+model2: 
+  cis_only: True
+  cis_Interpretability: false
+  Interpretability_lmdb_dir: emb/Human/esm2_15b.Human.lmdb/onlyCLS.lmdb
+  Interpretability_protein_id: dataset/Human/2193/c1Train.txt
+  top_k: 10
+model1: 
+
+  Residue_Interpretability: True

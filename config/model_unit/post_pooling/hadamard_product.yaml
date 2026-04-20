@@ -1,0 +1,3 @@
+operation: "hadamard_product"
+description: "对两个池化后的蛋白向量进行元素级的哈达玛积"
+embedding_dim: ${model.embedding_dim}

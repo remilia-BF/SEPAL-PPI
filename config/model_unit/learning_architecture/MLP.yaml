@@ -1,0 +1,7 @@
+type: "MLP"
+input_dim: ${model.embedding_dim}
+layers: [1024, 512, 128, 16]
+activation: "GELU"
+dropout: 0.0
+output_activation: "sigmoid"
+description: "四层MLP进行二分类"

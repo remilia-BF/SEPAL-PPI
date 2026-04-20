@@ -1,0 +1,10 @@
+experiment_name: sepal-ppi-avg(change1280)
+defaults:
+- _self_
+- training: default_nolr
+- model: avg_pooling
+- data: Strings_plant50/esm2_15b.avg
+- logging: default
+- output: default
+- inference: default
+change_embedding_dim: 1280

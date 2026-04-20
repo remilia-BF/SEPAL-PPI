@@ -1,0 +1,3 @@
+preprocessor: "none"
+description: "恒等变换，不对输入进行任何修改"
+embedding_dim: ${model.embedding_dim}

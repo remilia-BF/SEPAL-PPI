@@ -1,0 +1,13 @@
+# 默认数据配置
+
+use_sequence_data: true
+embedding_file: emb/Strings_plant50/pooled_feature/pooled_embeddings.lmdb
+embedding_dim: 1280
+target_precision: fp32
+train_file: dataset/Strings_plant50/c1Train.txt
+validation_file: dataset/Strings_plant50/c2Test.txt
+test_file: dataset/Strings_plant50/c3Test.txt
+fasta_file: dataset/Strings_plant50/protein.fasta
+cache_size: 1200000
+max_length: 5120
+cis_type: true

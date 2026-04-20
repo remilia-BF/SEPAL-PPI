@@ -1,0 +1,96 @@
+preprocessor: "feature_concat"
+description: "【极致轻量化版本】移除Transformer，使用1D-CNN + 提前降维(8维) + 全局门控"
+embedding_dim: ${model.embedding_dim}
+
+
+# 嵌入层配置（用于ID类特征）
+embedding:
+
+  # s1ssttoken嵌入层配置
+  prosst_emb_dim: ${..feature_files.s1ssttoken.feature_dim}  # ProSST结构token嵌入维度，引用特征维度
+  
+   # 通用嵌入层配置
+  total_feature_emb_dim: 64  # 总特征嵌入维度，可以调整以适应模型容量
+  # 通用嵌入层配置
+  dropout: 0.1  # 嵌入层dropout
+  padding_idx: null  # 填充索引，null表示无填充
+  
+# 数据处理配置
+data_processing:
+  protein_fasta_path: ${protein_fasta_path}  # 从顶层配置引用
+  cache_features: true  # 是否缓存特征数据到内存
+  normalization_method: "z_score"  # 归一化方法: z_score, min_max
+  handle_missing: "zero"  # 缺失值处理: zero, mean, drop
+  # 统一特征根目录：训练时指向 S1，预测时可在命令行用 --predict-prot-feature-folder 覆盖
+  all_feature_folder: ${all_feature_folder}  # 从顶层配置引用
+  # 预测阶段如果缺失特征，按错误记录但继续回退为0向量
+  log_missing_as_error: true
+  
+  # 【新增】轻量级编码器配置（1D-CNN替代Transformer）
+  feature_encoder:
+    kernel_size: 3      # 1D-CNN卷积核大小
+    dropout: 0.1        # Dropout率
+    activation: "gelu"  # 激活函数
+  
+  # 【新增】Embedding特征压缩配置
+  embedding_compression:
+    method: "mlp"    # 压缩方法: linear (线性投影), mlp (多层感知机), truncate (截断)
+    linear:
+      # 使用简单线性投影压缩 embedding
+    mlp:
+      activation: "gelu"
+      dropout: 0.1
+  
+#是否开启门控
+feature_gating:
+  enabled: true   # 启用全局门控机制
+  hidden_dim: 64  # 门控隐藏层维度（简化为64）
+  activation: "GELU"  # 门控激活函数类型：ReLU, GELU, SiLU
+  dropout: 0.1    # 门控dropout
+  sparsity_loss_weight: 0.01  # 控制门控稀疏性的损失权重
+
+# 低维投影配置
+projection:
+  early_compression_dim: 8  # 【核心优化】提前极致降维：每个特征编码后立即降到8维
+  output_dim: 128           # 【优化】降低最终低维空间维度（从256→128）
+  hidden_layers: []         # 【简化】移除隐藏层，直接投影
+  activation: "GELU"
+  dropout: 0.1
+  use_low_rank_final: true          # 【新增】最终映射使用低秩分解
+  use_multiplicative_residual: false # 【新增】是否使用乘法残差（false=传统加法）
+
+# ResNet-1D-CNN 层配置（低维空间内）
+resnet:
+  num_blocks: 1      # 【优化】减少为1块（从2→1）
+  kernel_size: 3
+  dropout: 0.1
+  activation: "GELU"
+
+# 特征文件配置 - 控制每个JSON文件是否参与训练
+feature_files:
+  # 浮点数特征 (需要归一化)
+    
+  sasa_features:
+    enabled: false
+    file_path: "sasa_features.json"
+    normalize: true
+    raw_dim: 1
+
+  # 特殊特征
+  secondary_structure_features:
+    enabled: true
+    file_path: "secondary_structure_features.json"
+    normalize: false  # 独热编码不需要归一化
+    raw_dim: 3  # 每个残基3个独热编码值 [H, E, C]
+
+  s1ssttoken:
+    enabled: false
+    file_path: "prosst_features.json"
+    normalize: false  # ID类特征不需要归一化
+    feature_type: "embedding"  # 使用嵌入层处理
+    vocab_size: 2048  # 0-2047的结构ID
+    embedding_dim: 2048   # 【优化】降低嵌入维度（2048→512）
+    feature_dim: 2048       # 【优化】压缩后统一为8维（通过embedding_compression处理）
+    compression_dim: 128
+
+

@@ -1,0 +1,23 @@
+ensemble_config: results/Strings_plant50/esm2_15b/cis_residue_ensemble/ensemble_inference_config.yaml
+
+test_id_file: predict/Gmax/st50/st50.soybean_interactions.csv
+test_protein_fasta: predict/Gmax/st50/protein.fasta
+
+test_protein_lmdb_dir: 
+  model2: emb/Strings_plant50/esm2_15b.Strings_plant50.avg.1280.lmdb/noCLSeos.lmdb/bucketed_embeddings.lmdb
+  # 注意：模型2（CIS）在训练时使用的是 ESM2-15B 的原始 CLS 维度 5120，
+  # 因此这里需要提供 5120 维的 onlyCLS.lmdb，而不是投影到 640 维的版本。
+  # 使用现有的 5120 维 Rice CLS LMDB：
+  model1: emb/Strings_plant50/esm2_15b.Strings_plant50.lmdb/onlyCLS.lmdb
+
+
+
+model1: 
+  cis_only: True
+  cis_Interpretability: false
+  Interpretability_lmdb_dir: emb/Strings_plant50/esm2_15b.Strings_plant50.lmdb/onlyCLS.lmdb
+  Interpretability_protein_id: dataset/Strings_plant50/c1Train.txt
+  top_k: 10
+model2: 
+  #残基级别推理
+  Residue_Interpretability: True

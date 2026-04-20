@@ -1,0 +1,13 @@
+# 默认数据配置
+
+use_sequence_data: true
+embedding_file: emb/Human/esm2_15b.Human.avg.1280.lmdb/noCLSeos.lmdb/bucketed_embeddings.lmdb
+embedding_dim: 1280
+target_precision: bf16
+train_file: dataset/Human/2193/c1Train.txt
+validation_file: dataset/Human/2193/c2Validation.txt
+test_file: dataset/Human/2193/c3Test.txt
+fasta_file: dataset/Human/2193/protein.fasta
+cache_size: 12000
+max_length: 1024
+cis_type: false

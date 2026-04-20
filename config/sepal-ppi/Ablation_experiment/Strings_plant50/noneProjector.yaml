@@ -1,0 +1,12 @@
+experiment_name: sepal-ppi-feature-contant
+defaults:
+- _self_
+- training: default_nolr
+- model: noneProjector
+- data: Strings_plant50/esm2_15binput1280
+- logging: default
+- output: default
+- inference: default
+change_embedding_dim: 1280
+protein_fasta_path: dataset/Strings_plant50/protein.fasta
+all_feature_folder: mutifeature/Strings_plant50

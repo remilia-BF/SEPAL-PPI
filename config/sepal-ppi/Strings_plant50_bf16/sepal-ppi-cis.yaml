@@ -1,0 +1,9 @@
+experiment_name: sepal-ppi-cis
+defaults:
+- _self_
+- training: default_nolr
+- model: cis
+- data: Strings_plant50_bf16/esm2_15b.cis
+- logging: default
+- output: default
+- inference: default

@@ -1,0 +1,19 @@
+description: "projector(hidden_2560)"
+embedding_dim: ${model.embedding_dim}
+
+# 上游输入维度（来自LMDB或其他来源的每残基通道数）。
+# 默认沿用 embedding_dim；当与 embedding_dim 不一致时将触发线性投影。
+input_dim: ${data.embedding_dim}
+
+# 输入投影层配置
+projection:
+  type: mlp
+  hidden_dim: 2560
+  enabled: true 
+  dropout: 0.0
+  bias: true
+  activation: gelu
+  residual: true
+  layernorm: true
+
+separate_save_models: true

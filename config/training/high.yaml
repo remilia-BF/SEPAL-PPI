@@ -1,0 +1,19 @@
+# 默认训练配置
+# 使用 Hydra 变量引用实现参数复用
+
+epochs: 20
+batch_size: 128
+learning_rate: 0.0005
+seed: 42
+
+# 学习率调度器配置（自适应 + 预热 + 基于 Val-AP 的 Plateau 触发）
+lr_scheduler:
+  # 学习率调度器类型: 'adaptive' | 'cosine_annealing' | 'exponential_decay' | 'step' | 'none'
+  type: 'none'
+  # 预热配置
+  warmup:
+    enabled: true
+    epochs: 3                 # 预热轮数
+    initial_lr_factor: 0.1    # 预热起始LR = base_lr * initial_lr_factor
+    strategy: 'exponential'   # 'linear' 或 'exponential'
+  # 自适应（ReduceLROnPlateau）配置，监测 Val-AP(pr_auc)

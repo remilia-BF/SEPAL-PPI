@@ -1,0 +1,96 @@
+method: "advanced_attention_pooling"
+description: "优化的注意力池化：多头注意力 + 更强正则化"
+embedding_dim: ${model.embedding_dim}
+attention_num: 10          
+dropout: 0.05              
+save_attention: true
+
+# 新增优化参数
+attention_config:
+
+  type: "temperature_original"
+
+  # 通用参数
+  temperature: 0.3          # 基础温度参数（更低温度，使注意力更聚焦）
+  prior_lambda: 1.0         # 先验注入权重 lambda
+  use_layer_norm: false     # 关闭层归一化
+  residual_connection: false # 关闭残差连接
+
+feature_gating:
+  enabled: true   # 启用全局门控机制
+  hidden_dim: 64  # 门控隐藏层维度（简化为64）
+  activation: "GELU"  # 门控激活函数类型：ReLU, GELU, SiLU
+  dropout: 0.1    # 门控dropout
+  # 稀疏性正则化权重
+  sparsity_loss_weight: 0.01  # 控制门控稀疏性的损失权重
+
+attention_head:
+  head1:
+    file_path: "sasa_features.json"
+    enabled: true
+    raw_dim: 1
+    type: Soft_prior_weighting
+    how2mask: higher_mask
+
+  head2:
+    file_path: "sasa_features.json"
+    enabled: true
+    raw_dim: 1
+    type: Soft_prior_weighting
+    how2mask: lower_mask
+
+  head3:
+    file_path: "hmm_domain_flag.json"
+    enabled: true
+    raw_dim: 1
+    type: Hard_Mask
+    how2mask: zero_mask
+
+  head4:
+    file_path: "hmm_domain_flag.json"
+    enabled: true
+    raw_dim: 1
+    type: Hard_Mask
+    how2mask: none_zero_mask
+
+  head5:
+    file_path: "hydrophobicity_features.json"
+    enabled: true
+    raw_dim: 1
+    type: Soft_prior_weighting
+    how2mask: higher_mask
+
+  head6:
+    file_path: "hydrophobicity_features.json"
+    enabled: true
+    raw_dim: 1
+    type: Soft_prior_weighting
+    how2mask: lower_mask
+
+  head7:
+    file_path: "secondary_structure_features.json"
+    enabled: true
+    raw_dim: 3
+    type: Loop_Mask
+    how2mask: zero_mask #屏蔽非loop
+
+  head8:
+    file_path: "secondary_structure_features.json"
+    enabled: true
+    raw_dim: 3
+    type: Loop_Mask
+    how2mask: none_zero_mask #屏蔽loop
+
+  head9:
+    file_path: none
+    enabled: true
+    raw_dim: 1
+    type: none
+    how2mask: attention #att
+
+  head10:
+    file_path: none
+    enabled: true
+    raw_dim: 1
+    type: none
+    how2mask: none #avg

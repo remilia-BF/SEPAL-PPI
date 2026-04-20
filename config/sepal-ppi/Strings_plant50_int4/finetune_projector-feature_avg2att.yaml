@@ -1,0 +1,21 @@
+experiment_name: fusion-finetune
+description: fusion_finetune_avg2att
+defaults:
+- _self_
+- training: low
+- logging: default
+- output: default
+- inference: default
+- data: Strings_plant50_int4/esm2_15binput1280
+- model: projector-feature-contant
+finetune:
+  base_checkpoint: results/Strings_plant50_int4/esm2_15b/Ablation_experiment/noneatt/best_model.pth
+  use_pretrained_embedding_dim: false
+  freeze_except:
+  - input_layer
+  - preprocessing
+  - pooling
+  - classifier
+change_embedding_dim: 1280
+protein_fasta_path: dataset/Strings_plant50/protein.fasta
+all_feature_folder: mutifeature/Strings_plant50

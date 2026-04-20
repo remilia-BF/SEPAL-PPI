@@ -1,0 +1,36 @@
+# Base Python dependencies for the SEPAL-PPI conda environment.
+# Install PyTorch and other CUDA-sensitive packages separately as documented in README.md.
+
+numpy>=1.26,<3
+scipy>=1.13,<2
+pandas>=2.2,<3
+scikit-learn>=1.5,<2
+matplotlib>=3.8,<4
+seaborn>=0.13,<1
+
+einops>=0.8,<1
+
+biopython>=1.85,<2
+
+transformers>=4.46,<5
+safetensors>=0.5,<1
+
+lmdb>=1.5,<2
+
+hydra-core>=1.3,<2
+omegaconf>=2.3,<3
+
+tqdm>=4.66,<5
+pyyaml>=6,<7
+
+pytest>=8,<9
+
+# Optional add-ons for specific workflows:
+# faiss-cpu>=1.8,<2         # CIS interpretability / ANN search
+# bitsandbytes>=0.43,<1     # int8/int4 ESM inference
+# flash-attn>=2.8,<3        # optional acceleration on supported CUDA systems
+# dgl>=2.4,<3               # graph experiments, install from the matching channel/wheel
+# torch-geometric>=2.5,<3   # graph experiments, install from the matching wheel index
+# pdb2pqr>=3.7,<4           # PDB-based feature generation
+# propka>=3.5,<4            # installed alongside pdb2pqr in the conda environment
+# mmcif-pdbx>=2,<3          # optional mmCIF parsing helpers

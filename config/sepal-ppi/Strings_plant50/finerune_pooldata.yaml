@@ -1,0 +1,18 @@
+experiment_name: fusion-finetune
+description: fusion_finetune_pooldata
+defaults:
+- _self_
+- training: default_nolr
+- logging: default
+- output: default
+- inference: default
+- data: Strings_plant50/esm2_15bpool1280
+- model: onlyMLP
+finetune:
+  base_checkpoint: emb/Strings_plant50/pooled_feature/resulet-test/best_model.pth
+  use_pretrained_embedding_dim: false
+  freeze_except:
+  - pooling
+  - classifier
+change_embedding_dim: 1280
+

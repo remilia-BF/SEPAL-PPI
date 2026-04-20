@@ -1,0 +1,23 @@
+ensemble_config: results/Strings_plant50_bf16/esm2_15b/cis_ensemble_noneProjector/ensemble_inference_config.yaml
+
+test_id_file: predict/Gmax/Gly/ll.csv
+test_protein_fasta: predict/Gmax/Gly/subset.fasta
+
+test_protein_lmdb_dir: 
+
+  model1: emb/Gly/bf16/esm2_15b.gly_bf16.avg.1280.lmdb/onlyCLS.lmdb
+  model2: emb/Gly/bf16/esm2_15b.gly_bf16.avg.1280.lmdb/noCLSeos.lmdb/bucketed_embeddings.lmdb
+
+
+
+
+
+model1: 
+  cis_only: True
+  cis_Interpretability: false
+  Interpretability_lmdb_dir: emb/Strings_plant50/esm2_15b.Strings_plant50.lmdb/onlyCLS.lmdb
+  Interpretability_protein_id: dataset/Strings_plant50/c1Train.txt
+  top_k: 10
+model2: 
+  #残基级别推理
+  Residue_Interpretability: True
