@@ -138,57 +138,99 @@ python sepal-ppi.py \
   --predict-prot-feature-folder mutifeature/Human
 ```
 
-## Training on your own data
+Reproducing the paper workflow
+To reproduce all training runs reported in the manuscript, pre-written batch scripts are provided under config/batch/. Simply run the script corresponding to the dataset/configuration you need:
+bash# Available scripts
+ls config/batch/
+# train_Human.sh
+# train_Interact_Ara.sh
+# train_Strings_plant50bf16.sh
+# train_Strings_plant50int4.sh
+# train_Strings_plant50int8.sh
 
-### 1. Generate embeddings
+# Example: reproduce the Strings_plant50 int4 run
+bash config/batch/train_Strings_plant50int4.sh
 
-```bash
-python emb_tools/creatlmdb.py \
-  -m esm2_15b \
-  -f <path/to/fasta> \
-  -o emb/<your_dataset> \
-  --suffix <your_dataset> \
-  --commit-interval 100
-```
+# Example: reproduce the Human benchmark
+bash config/batch/train_Human.sh
+Each script runs the complete pipeline end-to-end (embedding generation → base model → fusion finetune → residue-level model → CIS → ensemble) without further manual intervention.
 
-### 2. Extract multimodal features
-
+Training on your own data
+The full training pipeline consists of seven sequential steps. The example below uses <your_dataset> as a placeholder — substitute your actual dataset name and paths throughout.
+Step 0: Prepare multimodal features
 ```bash
 python mutifeature_tools/one_step_mutifeature.py \
   -p dataset/<your_dataset>/pdb \
-  -f <path/to/fasta> \
-  -o mutifeature/<your_dataset>/mutifeature
+  -f dataset/<your_dataset>/protein.fasta \
+  -o mutifeature/<your_dataset>
 ```
-
-### 3. Train the residue-level model
-
+Step 1: Generate raw embeddings
+```bash
+python emb_tools/creatlmdbbyesme.py \
+  -m esm2_15b \
+  -f dataset/<your_dataset>/protein.fasta \
+  -o emb/<your_dataset> \
+  --suffix <your_dataset> \
+  --commit-interval 100 \
+  --precision <int4|int8|bf16> \
+  --no-bucket
+```
+Step 2: Train the base model (Average Pooling)
 ```bash
 python sepal-ppi.py \
   --hydra \
-  --config <your_dataset>/sepal-ppi-feature-contant.yaml \
-  --epochs 20 \
-  --output-dir results/<your_dataset>/esm15b/sepal-ppi-feature-contant
+  --config <your_dataset>/sepal-ppi-avg-noinput \
+  --epochs 25 \
+  --output-dir results/<your_dataset>/esm2_15b/sepal-ppi-avg-noinput
 ```
-
-### 4. Train the CIS model
-
+Step 3: Fusion finetune to obtain the input projection layer
 ```bash
 python sepal-ppi.py \
   --hydra \
-  --config config/sepal-ppi/Human/sepal-ppi-cis.yaml \
+  --config <your_dataset>/fusion_finetune_avg_to_1280 \
+  --mode fusion_finetune \
+  --output-dir results/<your_dataset>/esm2_15b/sepal-ppi-fusion_finetune_avg_to_1280
+```
+Step 4: Generate projected residue-level embeddings
+```bash
+python emb_tools/creatlmdbbyesme.py \
+  -m esm2_15b \
+  -f dataset/<your_dataset>/protein.fasta \
+  -o emb/<your_dataset> \
+  --suffix <your_dataset>.avg.1280 \
+  --commit-interval 100 \
+  --precision <int4|int8|bf16> \
+  --input-layer-ckpt results/<your_dataset>/esm2_15b/sepal-ppi-fusion_finetune_avg_to_1280/input_layer.pth \
+  --source-lmdb emb/<your_dataset>/esm2_15b.<your_dataset>.lmdb
+```
+Step 5: Train the residue-level model (Projector Feature Contant)
+```bash
+python sepal-ppi.py \
+  --hydra \
+  --config <your_dataset>/sepal-ppi-projector-feature-contant \
+  --epochs 10 \
+  --output-dir results/<your_dataset>/esm2_15b/sepal-ppi-projector-feature-contant
+```
+Note: After this step you may remove the intermediate raw embedding LMDB to save disk space:
+bashrm emb/<your_dataset>/esm2_15b.<your_dataset>.lmdb/noCLSeos.lmdb
+
+Step 6: Train the CIS model
+```bash
+python sepal-ppi.py \
+  --hydra \
+  --config <your_dataset>/sepal-ppi-cis \
   --epochs 50 \
-  --output-dir results/final/Human/esm15b/cis
+  --output-dir results/<your_dataset>/esm2_15b/sepal-ppi-cis
 ```
-
-### 5. Train the ensemble
-
+Step 7: Train the ensemble
 ```bash
 python sepal-ppi.py \
   --mode ensemble_train \
-  --ensemble-config config/ensemble/Human/esm_ensemble.yaml \
-  --predict-prot-feature-folder mutifeature/rice \
-  --output-dir results/Human/esm2_15b/sepal_ppi_ensemble_1
+  --ensemble-config config/sepal-ppi/<your_dataset>/esm_ensemble.yaml \
+  --predict-prot-feature-folder mutifeature/<your_dataset> \
+  --output-dir results/<your_dataset>/esm2_15b/cis_residue_ensemble
 ```
+Tip: For a fully worked concrete example of each step above, refer to config/batch/train_Strings_plant50int4.sh. The paper-reproduction scripts in config/batch/ follow exactly this seven-step structure with dataset-specific paths and hyperparameters already filled in.
 
 ## Repository layout
 
