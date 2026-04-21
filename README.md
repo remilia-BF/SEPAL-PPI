@@ -96,7 +96,7 @@ python mutifeature_tools/one_step_mutifeature.py \
 ### 2. Generate embeddings
 
 ```bash
-python emb_tools/creatlmdb.py \
+python emb_tools/creatlmdbbyesme.py \
   -m esm2_15b \
   -f dataset/<your_dataset>/protein.fasta \
   -o emb/<your_dataset> \
@@ -141,18 +141,18 @@ python sepal-ppi.py \
 Reproducing the paper workflow
 To reproduce all training runs reported in the manuscript, pre-written batch scripts are provided under config/batch/. Simply run the script corresponding to the dataset/configuration you need:
 bash# Available scripts
-ls config/batch/
+```
 # train_Human.sh
 # train_Interact_Ara.sh
 # train_Strings_plant50bf16.sh
 # train_Strings_plant50int4.sh
 # train_Strings_plant50int8.sh
-
+```
 # Example: reproduce the Strings_plant50 int4 run
-bash config/batch/train_Strings_plant50int4.sh
+`bash config/batch/train_Strings_plant50int4.sh`
 
 # Example: reproduce the Human benchmark
-bash config/batch/train_Human.sh
+`bash config/batch/train_Human.sh`
 Each script runs the complete pipeline end-to-end (embedding generation → base model → fusion finetune → residue-level model → CIS → ensemble) without further manual intervention.
 
 Training on your own data
